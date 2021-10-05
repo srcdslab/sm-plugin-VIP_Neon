@@ -9,7 +9,7 @@ public Plugin:myinfo =
 {
 	name        = "[VIP] Neon",
 	version     = "1.2"
-    description	= "Generate colored beacon when you jump",
+    description	= "Colored neons",
 	author      = "R1KO & Pheonix (˙·٠●Феникс●٠·˙)",
     url			= "www.hlmod.ru",
 };
