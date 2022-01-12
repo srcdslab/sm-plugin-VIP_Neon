@@ -14,7 +14,7 @@ public Plugin:myinfo =
     url			= "www.hlmod.ru",
 };
 
-static const String:g_sFeature[][] = {"NEON", "NEON_MENU"};
+static const String:g_sFeature[][] = {"VIP_Neon", "VIP_Neon_Menu"};
 
 new g_iClientColor[MAXPLAYERS+1][4],
 	g_iNeon[MAXPLAYERS+1],
