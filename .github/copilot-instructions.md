@@ -6,8 +6,8 @@ This repository contains **VIP_Neon**, a SourceMod plugin that provides customiz
 
 **Current Version**: 1.2 (as defined in plugin info block)
 - **Language**: SourcePawn (SourceMod scripting language)
-- **Platform**: SourceMod 1.11+ / Source Engine games
-- **Build System**: SourceKnight (modern SourceMod build tool)
+- **Platform**: SourceMod 1.12+ / Source Engine games
+- **Build System**: native GitHub Actions (spcomp via rumblefrog/setup-sp)
 - **Dependencies**: VIP Core plugin system
 
 ## Project Structure
@@ -20,35 +20,27 @@ addons/sourcemod/
     └── neon_colors.ini       # Color configuration file
 
 .github/workflows/ci.yml      # GitHub Actions CI/CD
-sourceknight.yaml            # Build configuration
 ```
 
 ## Build System & Development Workflow
 
-### SourceKnight Build System
-This project uses **SourceKnight** instead of traditional `spcomp` compilation:
+### GitHub Actions Build
+This project builds directly with `spcomp` via native GitHub Actions:
 
 ```bash
-# Install SourceKnight (if needed)
-pip install sourceknight
-
-# Build the plugin
-sourceknight build
-
-# The compiled .smx file will be in the output directory
+# CI installs SourceMod (via rumblefrog/setup-sp) and clones VIP Core includes,
+# then compiles with:
+spcomp -i include -o ../plugins/VIP_Neon.smx VIP_Neon.sp
 ```
 
-**Note**: SourceKnight may have dependency conflicts in some environments. The GitHub Actions CI/CD pipeline uses a containerized environment that handles these dependencies automatically.
-
-**Key SourceKnight files:**
-- `sourceknight.yaml` - Build configuration with dependencies
-- Dependencies auto-downloaded: SourceMod 1.11.0-git6917, VIP Core includes
+To build locally, install the SourcePawn compiler matching SourceMod 1.12.x,
+fetch the VIP Core includes into `addons/sourcemod/scripting/include/`, and run
+the `spcomp` command above from `addons/sourcemod/scripting`.
 
 ### CI/CD Pipeline
-- **Automated builds** on push/PR via GitHub Actions
+- **Automated builds** on push/PR via GitHub Actions (`.github/workflows/ci.yml`)
 - **Artifact generation** with packaged plugin files
-- **Automatic releases** on tags and main branch updates
-- Uses `maxime1907/action-sourceknight@v1` for builds
+- **Automatic releases** on tags and master/main branch updates, using a rolling `latest` tag
 
 ## Code Patterns & Architecture
 
@@ -162,7 +154,7 @@ When modifying the plugin:
 
 1. **Build verification:**
    ```bash
-   sourceknight build
+   spcomp -i include -o ../plugins/VIP_Neon.smx VIP_Neon.sp
    # Check for compilation warnings/errors
    ```
 
@@ -239,8 +231,8 @@ PrintToServer("Client %d: VIP=%b, Color=[%d,%d,%d,%d]",
 6. **Verify artifact** contains all necessary files
 
 The GitHub Actions workflow automatically:
-- Builds the plugin with SourceKnight
-- Packages data files with the compiled plugin
+- Builds the plugin with `spcomp`
+- Packages the compiled plugin
 - Creates releases with downloadable archives
 - Maintains a "latest" release tag
 
@@ -260,4 +252,4 @@ This plugin requires VIP Core for:
 - **SDKHooks**: Entity transmission control
 - **Menus**: Color selection interface
 
-When modifying, ensure compatibility with SourceMod 1.11+ and maintain the existing VIP Core integration patterns.
+When modifying, ensure compatibility with SourceMod 1.12+ and maintain the existing VIP Core integration patterns.
