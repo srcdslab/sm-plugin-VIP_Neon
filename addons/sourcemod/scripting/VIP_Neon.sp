@@ -1,11 +1,12 @@
 #pragma semicolon 1
+#pragma newdecls required
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
 #include <vip_core>
 #include <clientprefs>
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name        = "[VIP] Neon",
 	version     = "1.3",
@@ -14,25 +15,23 @@ public Plugin:myinfo =
     url			= "www.hlmod.ru",
 };
 
-static const String:g_sFeature[][] = {"VIP_Neon", "VIP_Neon_Menu"};
+static const char g_sFeature[][] = {"VIP_Neon", "VIP_Neon_Menu"};
 
-new g_iClientColor[MAXPLAYERS+1][4],
-	g_iNeon[MAXPLAYERS+1],
-	g_iClientItem[MAXPLAYERS+1];
+int g_iClientColor[MAXPLAYERS+1][4], g_iNeon[MAXPLAYERS+1], g_iClientItem[MAXPLAYERS+1];
 
 //new bool:g_bHide;
-new KeyValues:g_hKeyValues, Menu:g_hColorsMenu, Cookie:g_hCookie;
+KeyValues g_hKeyValues; Menu g_hColorsMenu; Cookie g_hCookie;
 
 bool g_bHideNeon[MAXPLAYERS +1] = {false, ...};
 Cookie g_hHideNeonCookie;
 
-public VIP_OnVIPLoaded()
+public void VIP_OnVIPLoaded()
 {
 	VIP_RegisterFeature(g_sFeature[0], BOOL, _, OnToggleItem);
 	VIP_RegisterFeature(g_sFeature[1], _, SELECTABLE, OnSelectItem, _, OnDrawItem);
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	g_hCookie = new Cookie("VIP_Neon", "VIP_Neon", CookieAccess_Public);
 	g_hHideNeonCookie = new Cookie("VIP_HideNeon", "VIP_HideNeon", CookieAccess_Public);
@@ -67,7 +66,7 @@ public void OnClientCookiesCached(int client)
 	g_bHideNeon[client] = view_as<bool>(StringToInt(CookieValue));
 }
 
-public OnPluginEnd() 
+public void OnPluginEnd() 
 {
 	if(CanTestFeatures() && GetFeatureStatus(FeatureType_Native, "VIP_UnregisterFeature") == FeatureStatus_Available)
 	{
@@ -76,7 +75,7 @@ public OnPluginEnd()
 	}
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
 	g_hColorsMenu.RemoveAllItems();
 
@@ -96,7 +95,7 @@ public OnMapStart()
 	g_hKeyValues.Rewind();
 	if(g_hKeyValues.JumpToKey("Colors") && g_hKeyValues.GotoFirstSubKey(false))
 	{
-		decl String:sColor[64];
+		char sColor[64];
 		do
 		{
 			if (g_hKeyValues.GetSectionName(sColor, sizeof(sColor)))
@@ -109,11 +108,11 @@ public OnMapStart()
 	g_hKeyValues.Rewind();
 }
 
-public VIP_OnVIPClientLoaded(iClient)
+public void VIP_OnVIPClientLoaded(int iClient)
 {
 	if(VIP_GetClientFeatureStatus(iClient, g_sFeature[0]) != NO_ACCESS)
 	{
-		decl String:sColor[64];
+		char sColor[64];
 		g_hCookie.Get(iClient, sColor, sizeof(sColor));
 		if(sColor[0] == 0 || LoadClientColor(iClient, sColor) == false)
 		{
@@ -129,12 +128,12 @@ public VIP_OnVIPClientLoaded(iClient)
 	}
 }
 
-bool:LoadClientColor(iClient, const String:sColor[])
+bool LoadClientColor(int iClient, const char[] sColor)
 {
 	g_hKeyValues.Rewind();
 	if (g_hKeyValues.JumpToKey("Colors"))
 	{
-		decl String:sBuffer[64];
+		char sBuffer[64];
 		g_hKeyValues.GetString(sColor, sBuffer, sizeof(sBuffer));
 		if(StrEqual(sBuffer, "randomcolor"))
 		{
@@ -156,9 +155,9 @@ bool:LoadClientColor(iClient, const String:sColor[])
 	return false;
 }
 
-UTIL_GetItemIndex(const String:sItemInfo[])
+int UTIL_GetItemIndex(const char[] sItemInfo)
 {
-	decl String:sColor[64], i, iSize;
+	char sColor[64]; int i, iSize;
 	iSize = g_hColorsMenu.ItemCount;
 	for(i = 0; i < iSize; ++i)
 	{
@@ -172,13 +171,13 @@ UTIL_GetItemIndex(const String:sItemInfo[])
 	return -1;
 }
 
-public bool:OnSelectItem(iClient, const String:sFeatureName[])
+public bool OnSelectItem(int iClient, const char[] sFeatureName)
 {
 	g_hColorsMenu.Display(iClient, MENU_TIME_FOREVER);
 	return false;
 }
 
-public Handler_ColorsMenu(Menu:hMenu, MenuAction:action, iClient, Item)
+public void Handler_ColorsMenu(Menu hMenu, MenuAction action, int iClient, int Item)
 {
 	switch(action)
 	{
@@ -188,14 +187,14 @@ public Handler_ColorsMenu(Menu:hMenu, MenuAction:action, iClient, Item)
 		}
 		case MenuAction_Display:
 		{
-	 		decl String:sBuffer[255];
+	 		char sBuffer[255];
 			FormatEx(sBuffer, sizeof(sBuffer), "%T", g_sFeature[1], iClient);
  
 			view_as<Panel>(Item).SetTitle(sBuffer);
 		}
 		case MenuAction_Select:
 		{
-			decl String:sColor[64];
+			char sColor[64];
 			hMenu.GetItem(Item, sColor, sizeof(sColor));
 			g_iClientItem[iClient] = Item;
 			if(LoadClientColor(iClient, sColor))
@@ -217,7 +216,7 @@ public Handler_ColorsMenu(Menu:hMenu, MenuAction:action, iClient, Item)
 	}
 }
 
-public OnDrawItem(iClient, const String:sFeatureName[], iStyle)
+public int OnDrawItem(int iClient, const char[] sFeatureName, int iStyle)
 {
 	switch(VIP_GetClientFeatureStatus(iClient, g_sFeature[0]))
 	{
@@ -229,7 +228,7 @@ public OnDrawItem(iClient, const String:sFeatureName[], iStyle)
 	return iStyle;
 }
 
-public Action:OnToggleItem(iClient, const String:sFeatureName[], VIP_ToggleState:OldStatus, &VIP_ToggleState:NewStatus)
+public Action OnToggleItem(int iClient, const char[] sFeatureName, VIP_ToggleState OldStatus, VIP_ToggleState &NewStatus)
 {
 	RemoveNeon(iClient);
 
@@ -241,13 +240,13 @@ public Action:OnToggleItem(iClient, const String:sFeatureName[], VIP_ToggleState
 	return Plugin_Continue;
 }
 
-public OnClientDisconnect(iClient)
+public void OnClientDisconnect(int iClient)
 {
 	g_iNeon[iClient] = 0;
 	g_bHideNeon[iClient] = false;
 }
 
-public VIP_OnPlayerSpawn(iClient, iTeam, bool:bIsVIP)
+public void VIP_OnPlayerSpawn(int iClient, int iTeam, bool bIsVIP)
 {
 	if(bIsVIP && VIP_IsClientFeatureUse(iClient, g_sFeature[0]))
 	{
@@ -255,12 +254,12 @@ public VIP_OnPlayerSpawn(iClient, iTeam, bool:bIsVIP)
 	}
 }
 
-public Event_PlayerDeath(Event:hEvent, const String:sEvName[], bool:dBontBroadcast)
+public void Event_PlayerDeath(Event hEvent, const char[] sEvName, bool dBontBroadcast)
 {
 	RemoveNeon(GetClientOfUserId(hEvent.GetInt("userid")));
 }
 
-RemoveNeon(iClient)
+void RemoveNeon(int iClient)
 {
 	if(g_iNeon[iClient] && IsValidEdict(g_iNeon[iClient]))
 	{
@@ -270,13 +269,13 @@ RemoveNeon(iClient)
 	g_iNeon[iClient] = 0;
 }
 
-SetClientNeon(iClient)
+void SetClientNeon(int iClient)
 {
 	RemoveNeon(iClient);
 
 	g_iNeon[iClient] = CreateEntityByName("light_dynamic");
 	DispatchKeyValue(g_iNeon[iClient], "brightness", "5");
-	decl Float:fOrigin[3],  String:sBuffer[16];
+	float fOrigin[3]; char sBuffer[16];
 	GetClientAbsOrigin(iClient, fOrigin);
 	switch(g_iClientColor[iClient][2])
 	{
@@ -331,7 +330,7 @@ SetClientNeon(iClient)
 	g_iNeon[iClient] = 0;
 }
 
-public Action HideNeon(iEntity, iClient)
+public Action HideNeon(int iEntity, int iClient)
 {
 	if (g_iNeon[iClient] == iEntity)
 	{
