@@ -1,0 +1,27 @@
+"Phrases"
+{
+
+	"VIP_Neon_Color_Changed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"You changed your neon color to {1}{2}"
+		"fr"		"Vous avez changé la couleur de votre néon en {1}{2}"
+		"ru"		"Вы изменили цвет неона на {1}{2}"
+		"es"		"Has cambiado el color de tu neón a {1}{2}"
+		"de"		"Du hast deine Neonfarbe geändert zu {1}{2}"
+		"pt"		"Você mudou a cor do seu neon para {1}{2}"
+		"chi"		"你已将霓虹颜色更改为 {1}{2}"
+	}
+
+	"VIP_Neon_Failed_Use"
+	{
+		"#format"	"{1:s}"
+		"en"		"Failed to use \"{1}\"!"
+		"fr"		"Impossible d'utiliser \"{1}\" !"
+		"ru"		"Ошибка использования \"{1}\"!."
+		"es"		"¡No se pudo usar \"{1}\"!"
+		"de"		"\"{1}\" konnte nicht verwendet werden!"
+		"pt"		"Falha ao usar \"{1}\"!"
+		"chi"		"无法使用 \"{1}\"！"
+	}
+}

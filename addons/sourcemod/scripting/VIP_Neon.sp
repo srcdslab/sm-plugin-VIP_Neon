@@ -33,6 +33,8 @@ public void VIP_OnVIPLoaded()
 
 public void OnPluginStart()
 {
+	LoadTranslations("vip_neon.phrases");
+
 	g_hCookie = new Cookie("VIP_Neon", "VIP_Neon", CookieAccess_Public);
 	g_hHideNeonCookie = new Cookie("VIP_HideNeon", "VIP_HideNeon", CookieAccess_Public);
 	
@@ -199,7 +201,7 @@ public void Handler_ColorsMenu(Menu hMenu, MenuAction action, int iClient, int I
 			g_iClientItem[iClient] = Item;
 			if(LoadClientColor(iClient, sColor))
 			{
-				VIP_PrintToChatClient(iClient, " \x03Вы изменили цвет неона на \x04%s", sColor);
+				VIP_PrintToChatClient(iClient, " \x03%t", "VIP_Neon_Color_Changed", "\x04", sColor);
 				g_hCookie.Set(iClient, sColor);
 				if(IsPlayerAlive(iClient))
 				{
@@ -208,7 +210,7 @@ public void Handler_ColorsMenu(Menu hMenu, MenuAction action, int iClient, int I
 			}
 			else
 			{
-				VIP_PrintToChatClient(iClient, "Ошибка использования \"%s\"!.", sColor);
+				VIP_PrintToChatClient(iClient, "%t", "VIP_Neon_Failed_Use", sColor);
 			}
 
 			g_hColorsMenu.Display(iClient, MENU_TIME_FOREVER);
