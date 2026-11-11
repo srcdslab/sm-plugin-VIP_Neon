@@ -9,7 +9,7 @@
 public Plugin myinfo =
 {
 	name        = "[VIP] Neon",
-	version     = "1.4.0",
+	version     = "1.4.1",
     description	= "Colored neons",
 	author      = "R1KO & Pheonix (˙·٠●Феникс●٠·˙)",
     url			= "www.hlmod.ru",
