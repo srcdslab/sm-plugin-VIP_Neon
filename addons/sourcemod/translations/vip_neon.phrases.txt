@@ -11,6 +11,12 @@
 		"de"		"Du hast deine Neonfarbe geändert zu {1}{2}"
 		"pt"		"Você mudou a cor do seu neon para {1}{2}"
 		"chi"		"你已将霓虹颜色更改为 {1}{2}"
+		"pl"		"Zmieniono kolor neonu na {1}{2}"
+		"tr"		"Neon renginizi {1}{2} olarak değiştirdiniz"
+		"it"		"Hai cambiato il colore del tuo neon in {1}{2}"
+		"ua"		"Ви змінили колір свого неону на {1}{2}"
+		"zho"		"你已將霓虹顏色更改為 {1}{2}"
+		"cze"		"Změnil jsi barvu svého neonu na {1}{2}"
 	}
 
 	"VIP_Neon_Failed_Use"
@@ -23,5 +29,11 @@
 		"de"		"\"{1}\" konnte nicht verwendet werden!"
 		"pt"		"Falha ao usar \"{1}\"!"
 		"chi"		"无法使用 \"{1}\"！"
+		"pl"		"Nie udało się użyć \"{1}\"!"
+		"tr"		"\"{1}\" kullanılamadı!"
+		"it"		"Impossibile usare \"{1}\"!"
+		"ua"		"Не вдалося використати \"{1}\"!"
+		"zho"		"無法使用 \"{1}\"！"
+		"cze"		"Nepodařilo se použít \"{1}\"!"
 	}
 }
